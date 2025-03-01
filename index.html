@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logical Appeals - Design & Development</title>
+    <title>Logical Appeals - Legal Minds, Digital Mastery</title>
     <style>
         /* CSS Reset */
         * {
@@ -17,6 +17,8 @@
             --neon-blue: #00d7ff;
             --neon-purple: #9437ff;
             --dark-blue: #120458;
+            --matrix-green: #00ff41;
+            --matrix-dark: #000;
             --text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
             --glow-effect: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-purple);
         }
@@ -34,7 +36,7 @@
         /* Main Body Styling */
         body {
             font-family: "Helvetica", sans-serif;
-            background-color: var(--dark-blue);
+            background-color: var(--matrix-dark);
             color: white;
             min-height: 100vh;
             display: flex;
@@ -44,7 +46,53 @@
             position: relative;
         }
 
-        /* Minimalist Container */
+        /* Matrix Animation Background */
+        .matrix-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .matrix-column {
+            position: absolute;
+            top: -100%;
+            width: 30px;
+            color: var(--matrix-green);
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            text-align: center;
+            opacity: 0;
+            animation: matrix-rain linear infinite;
+            transform: translateZ(0); /* Force GPU acceleration */
+        }
+
+        @keyframes matrix-rain {
+            0% {
+                top: -100%;
+                opacity: 1;
+            }
+            100% {
+                top: 100%;
+                opacity: 0.3;
+            }
+        }
+
+        /* Create a darkened overlay for readability */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.85) 70%);
+            z-index: -1;
+        }
+
+        /* Minimalist Container - FIXED: removed backdrop-filter and any background colors */
         .container {
             display: flex;
             flex-direction: column;
@@ -54,15 +102,18 @@
             padding: 2rem;
             max-width: 100%;
             width: 100%;
+            z-index: 1;
+            /* Removed backdrop-filter property that was causing the transparency issue */
         }
 
-        /* Content wrapper to ensure consistent width */
+        /* Content wrapper to ensure consistent width - FIXED: ensure complete transparency */
         .content-wrapper {
             width: 100%;
             max-width: 600px; /* Adjust based on desired width */
             display: flex;
             flex-direction: column;
             align-items: center;
+            background: transparent; /* Ensure transparency */
         }
 
         /* Logo Styling */
@@ -77,6 +128,7 @@
             margin-bottom: 2rem;
             width: 100%;
             text-align: center;
+            background: transparent; /* Ensure transparency */
         }
 
         /* Logo Animation */
@@ -102,6 +154,7 @@
             animation: text-flicker 5s infinite alternate;
             transform: translateZ(0); /* Force GPU acceleration */
             width: 100%;
+            background: transparent; /* Ensure transparency */
         }
 
         @keyframes text-flicker {
@@ -127,18 +180,20 @@
             width: 100%;
             white-space: nowrap;
             letter-spacing: 0.1vmin;
+            background: transparent; /* Ensure transparency */
         }
 
-        /* Contact Email */
+        /* Contact Email - FIXED: Made background fully transparent */
         .contact {
             font-size: 2vmin;
             opacity: 0.8;
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
             transform: translateZ(0); /* Force GPU acceleration */
             cursor: pointer;
             padding: 0.5rem 1rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 4px;
+            background-color: transparent; /* Fully transparent background */
         }
 
         .contact:hover {
@@ -146,17 +201,7 @@
             transform: translateY(-3px) translateZ(0);
             border-color: var(--neon-blue);
             box-shadow: 0 0 10px rgba(0, 215, 255, 0.3);
-        }
-
-        /* Subtle background gradient */
-        .bg-gradient {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(20, 10, 100, 0.5) 0%, rgba(18, 4, 88, 1) 70%);
-            z-index: -1;
+            /* Removed background color change on hover to maintain transparency */
         }
 
         /* Responsive adjustments */
@@ -190,8 +235,11 @@
     </style>
 </head>
 <body>
-    <!-- Background Gradient -->
-    <div class="bg-gradient"></div>
+    <!-- Matrix Background Animation -->
+    <div class="matrix-background" id="matrixBackground"></div>
+
+    <!-- Darkened Overlay for Readability -->
+    <div class="overlay"></div>
 
     <!-- Main Content Container -->
     <div class="container">
@@ -203,7 +251,7 @@
             <div class="company-name">Logical Appeals</div>
 
             <!-- Tagline -->
-            <div class="tagline">Design & Development in the Digital Age</div>
+            <div class="tagline">Legal Minds, Digital Mastery</div>
 
             <!-- Contact Email -->
             <div class="contact" id="contactEmail" tabindex="0" role="button">logicalappeals@gmail.com</div>
@@ -217,6 +265,64 @@
         const companyName = document.querySelector('.company-name');
         const logo = document.querySelector('.logo');
         const tagline = document.querySelector('.tagline');
+        const matrixBackground = document.getElementById('matrixBackground');
+
+        // Matrix characters - Added more legal terminology symbols
+        const matrixChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789λΛ∧∨→←∃∀≡≈≠≤≥∞∑∏√∫∂∇∆Φ§¶†‡'.split('');
+
+        // Function to create matrix rain effect
+        function createMatrixRain() {
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReducedMotion) return;
+
+            // Clear existing content
+            matrixBackground.innerHTML = '';
+
+            // Get window dimensions
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            // Calculate number of columns based on window width
+            const columnCount = Math.floor(width / 30);
+
+            // Create columns
+            for (let i = 0; i < columnCount; i++) {
+                const column = document.createElement('div');
+                column.className = 'matrix-column';
+
+                // Random position and speed for each column
+                const leftPos = i * 30 + Math.random() * 15 - 7.5;
+                const duration = 7 + Math.random() * 15; // Between 7-22 seconds
+                const delay = Math.random() * 5; // Random delay up to 5 seconds
+
+                column.style.left = `${leftPos}px`;
+                column.style.animationDuration = `${duration}s`;
+                column.style.animationDelay = `${delay}s`;
+
+                // Create random characters for this column
+                const charCount = Math.floor(Math.random() * 20) + 10; // Between 10-30 characters
+                const columnContent = [];
+
+                for (let j = 0; j < charCount; j++) {
+                    const charIndex = Math.floor(Math.random() * matrixChars.length);
+                    columnContent.push(matrixChars[charIndex]);
+                }
+
+                column.textContent = columnContent.join('\n');
+                matrixBackground.appendChild(column);
+            }
+        }
+
+        // Function to update matrix animation on window resize
+        function updateMatrixRain() {
+            // Check if it's been at least 500ms since the last resize call
+            if (!updateMatrixRain.timeoutId) {
+                updateMatrixRain.timeoutId = setTimeout(() => {
+                    createMatrixRain();
+                    updateMatrixRain.timeoutId = null;
+                }, 500);
+            }
+        }
 
         // Function to ensure the logo width matches the company name width
         function adjustSizes() {
@@ -234,9 +340,42 @@
             tagline.style.width = `${companyNameWidth}px`;
         }
 
+        // Dynamically update matrix characters
+        function updateMatrixCharacters() {
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReducedMotion) return;
+
+            // Update some characters randomly every few seconds
+            setInterval(() => {
+                document.querySelectorAll('.matrix-column').forEach(column => {
+                    // 25% chance to update this column
+                    if (Math.random() < 0.25) {
+                        const chars = column.textContent.split('\n');
+
+                        // Update 1-3 random characters
+                        const updates = Math.floor(Math.random() * 3) + 1;
+                        for (let i = 0; i < updates; i++) {
+                            const charIndex = Math.floor(Math.random() * chars.length);
+                            const newCharIndex = Math.floor(Math.random() * matrixChars.length);
+                            chars[charIndex] = matrixChars[newCharIndex];
+                        }
+
+                        column.textContent = chars.join('\n');
+                    }
+                });
+            }, 2000);
+        }
+
         // Run on load and resize
-        window.addEventListener('load', adjustSizes);
-        window.addEventListener('resize', adjustSizes);
+        window.addEventListener('load', () => {
+            adjustSizes();
+            createMatrixRain();
+            updateMatrixCharacters();
+        });
+        window.addEventListener('resize', () => {
+            adjustSizes();
+            updateMatrixRain();
+        });
 
         // Copy email to clipboard when clicked
         contactEmail.addEventListener('click', () => {
