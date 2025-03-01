@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logical Appeals - Design & Development</title>
+    <style>
+        /* CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Custom Properties - Minimalist Color Palette */
+        :root {
+            --neon-blue: #00d7ff;
+            --neon-purple: #9437ff;
+            --dark-blue: #120458;
+            --text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            --glow-effect: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-purple);
+        }
+
+        /* Respecting Motion Preferences */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* Main Body Styling */
+        body {
+            font-family: "Helvetica", sans-serif;
+            background-color: var(--dark-blue);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Minimalist Container */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            max-width: 100%;
+            width: 100%;
+        }
+
+        /* Content wrapper to ensure consistent width */
+        .content-wrapper {
+            width: 100%;
+            max-width: 600px; /* Adjust based on desired width */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Logo Styling */
+        .logo {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 20vmin; /* Larger size */
+            line-height: 0.8;
+            color: var(--neon-blue);
+            text-shadow: var(--text-shadow), var(--glow-effect);
+            transform: translateZ(0); /* Force GPU acceleration */
+            animation: logo-pulse 5s infinite;
+            margin-bottom: 2rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Logo Animation */
+        @keyframes logo-pulse {
+            0%, 100% {
+                text-shadow: 0 0 5px rgba(255, 255, 255, 0.8),
+                             0 0 10px var(--neon-blue);
+            }
+            50% {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
+                             0 0 20px var(--neon-blue),
+                             0 0 30px var(--neon-purple);
+            }
+        }
+
+        /* Company Name */
+        .company-name {
+            font-size: 5vmin;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5vmin;
+            margin-bottom: 1.5rem;
+            animation: text-flicker 5s infinite alternate;
+            transform: translateZ(0); /* Force GPU acceleration */
+            width: 100%;
+        }
+
+        @keyframes text-flicker {
+            0%, 100% {
+                color: white;
+                text-shadow: 0 0 10px var(--neon-purple);
+            }
+            25% {
+                color: var(--neon-blue);
+                text-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-blue);
+            }
+            75% {
+                color: var(--neon-purple);
+                text-shadow: 0 0 15px var(--neon-purple), 0 0 25px var(--neon-purple);
+            }
+        }
+
+        /* Tagline */
+        .tagline {
+            font-size: 2.2vmin;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            width: 100%;
+            white-space: nowrap;
+            letter-spacing: 0.1vmin;
+        }
+
+        /* Contact Email */
+        .contact {
+            font-size: 2vmin;
+            opacity: 0.8;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateZ(0); /* Force GPU acceleration */
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        .contact:hover {
+            opacity: 1;
+            transform: translateY(-3px) translateZ(0);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 215, 255, 0.3);
+        }
+
+        /* Subtle background gradient */
+        .bg-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(20, 10, 100, 0.5) 0%, rgba(18, 4, 88, 1) 70%);
+            z-index: -1;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .tagline {
+                font-size: 2.8vmin;
+            }
+
+            .contact {
+                font-size: 3vmin;
+            }
+        }
+
+        /* For very small screens */
+        @media (max-width: 480px) {
+            .tagline {
+                white-space: normal;
+                text-align: center;
+            }
+        }
+
+        /* Accessibility */
+        :focus-visible {
+            outline: 3px solid var(--neon-blue);
+            outline-offset: 3px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Gradient -->
+    <div class="bg-gradient"></div>
+
+    <!-- Main Content Container -->
+    <div class="container">
+        <div class="content-wrapper">
+            <!-- Logo -->
+            <div class="logo" aria-label="Logical Appeals Logo">Λ</div>
+
+            <!-- Company Name -->
+            <div class="company-name">Logical Appeals</div>
+
+            <!-- Tagline -->
+            <div class="tagline">Design & Development in the Digital Age</div>
+
+            <!-- Contact Email -->
+            <div class="contact" id="contactEmail" tabindex="0" role="button">logicalappeals@gmail.com</div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // DOM elements
+        const contactEmail = document.getElementById('contactEmail');
+        const companyName = document.querySelector('.company-name');
+        const logo = document.querySelector('.logo');
+        const tagline = document.querySelector('.tagline');
+
+        // Function to ensure the logo width matches the company name width
+        function adjustSizes() {
+            // Get the computed width of the company name
+            const companyNameWidth = companyName.offsetWidth;
+
+            // Set the font size of the logo to make it match the width
+            const containerWidth = document.querySelector('.content-wrapper').offsetWidth;
+            const ratio = companyNameWidth / containerWidth;
+
+            // Adjust logo size
+            logo.style.fontSize = `${Math.min(ratio * 30, 20)}vmin`;
+
+            // Ensure tagline width matches company name width
+            tagline.style.width = `${companyNameWidth}px`;
+        }
+
+        // Run on load and resize
+        window.addEventListener('load', adjustSizes);
+        window.addEventListener('resize', adjustSizes);
+
+        // Copy email to clipboard when clicked
+        contactEmail.addEventListener('click', () => {
+            navigator.clipboard.writeText('logicalappeals@gmail.com')
+                .then(() => {
+                    // Visual feedback
+                    const originalText = contactEmail.textContent;
+                    contactEmail.textContent = 'Email Copied!';
+
+                    // Reset after 2 seconds
+                    setTimeout(() => {
+                        contactEmail.textContent = originalText;
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
+        });
+
+        // Keyboard accessibility for email copying
+        contactEmail.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                contactEmail.click();
+            }
+        });
+
+        // Detect if user prefers reduced motion
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) {
+            // Disable animations by adding a class to the body
+            document.body.classList.add('reduced-motion');
+        }
+    </script>
+</body>
+</html>
