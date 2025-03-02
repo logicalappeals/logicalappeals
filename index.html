@@ -16,10 +16,12 @@
         :root {
             --neon-blue: #00d7ff;
             --neon-purple: #9437ff;
+            --neon-white: #ffffff;
             --dark-blue: #120458;
             --matrix-green: #00ff41;
             --matrix-dark: #000;
             --text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            --glow-effect-white: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5);
             --glow-effect: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-purple);
         }
 
@@ -44,9 +46,10 @@
             align-items: center;
             overflow: hidden;
             position: relative;
+            perspective: 1000px; /* Added for 3D effects */
         }
 
-        /* Matrix Animation Background */
+        /* Matrix Animation Background - Now with layers for parallax */
         .matrix-background {
             position: fixed;
             top: 0;
@@ -56,6 +59,20 @@
             z-index: -1;
             overflow: hidden;
         }
+
+        /* Multiple matrix layers for parallax effect */
+        .matrix-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.2s ease-out;
+        }
+
+        .matrix-layer-1 { z-index: -10; opacity: 0.9; } /* Closest layer */
+        .matrix-layer-2 { z-index: -20; opacity: 0.7; } /* Middle layer */
+        .matrix-layer-3 { z-index: -30; opacity: 0.5; } /* Farthest layer */
 
         .matrix-column {
             position: absolute;
@@ -69,6 +86,11 @@
             animation: matrix-rain linear infinite;
             transform: translateZ(0); /* Force GPU acceleration */
         }
+
+        /* Different speeds for different layers */
+        .matrix-layer-1 .matrix-column { animation-duration: 7s; }
+        .matrix-layer-2 .matrix-column { animation-duration: 12s; }
+        .matrix-layer-3 .matrix-column { animation-duration: 18s; }
 
         @keyframes matrix-rain {
             0% {
@@ -92,7 +114,7 @@
             z-index: -1;
         }
 
-        /* Minimalist Container - FIXED: removed backdrop-filter and any background colors */
+        /* Minimalist Container */
         .container {
             display: flex;
             flex-direction: column;
@@ -103,10 +125,11 @@
             max-width: 100%;
             width: 100%;
             z-index: 1;
-            /* Removed backdrop-filter property that was causing the transparency issue */
+            transform-style: preserve-3d; /* Support 3D transformations */
+            transition: transform 0.3s ease;
         }
 
-        /* Content wrapper to ensure consistent width - FIXED: ensure complete transparency */
+        /* Content wrapper to ensure consistent width */
         .content-wrapper {
             width: 100%;
             max-width: 600px; /* Adjust based on desired width */
@@ -114,47 +137,80 @@
             flex-direction: column;
             align-items: center;
             background: transparent; /* Ensure transparency */
+            position: relative;
         }
 
-        /* Logo Styling */
+        /* Logo Styling - Now with interactive cursor effects */
         .logo {
             font-family: "Times New Roman", Times, serif;
             font-size: 20vmin; /* Larger size */
             line-height: 0.8;
-            color: var(--neon-blue);
-            text-shadow: var(--text-shadow), var(--glow-effect);
-            transform: translateZ(0); /* Force GPU acceleration */
-            animation: logo-pulse 5s infinite;
-            margin-bottom: 2rem;
+            color: var(--neon-white);
+            text-shadow: var(--text-shadow), var(--glow-effect-white);
+            transform: translateZ(0);
+            animation: logo-pulse-white 5s infinite;
+            margin-bottom: 1.5rem;
             width: 100%;
             text-align: center;
-            background: transparent; /* Ensure transparency */
+            background: transparent;
+            position: relative;
+            transition: transform 0.3s ease, text-shadow 0.3s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* Interactive logo hover effect */
+        .logo:hover {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 1),
+                         0 0 40px rgba(255, 255, 255, 0.8),
+                         0 0 60px rgba(0, 215, 255, 0.6);
         }
 
         /* Logo Animation */
-        @keyframes logo-pulse {
+        @keyframes logo-pulse-white {
             0%, 100% {
                 text-shadow: 0 0 5px rgba(255, 255, 255, 0.8),
-                             0 0 10px var(--neon-blue);
+                             0 0 10px rgba(255, 255, 255, 0.5);
             }
             50% {
-                text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
-                             0 0 20px var(--neon-blue),
-                             0 0 30px var(--neon-purple);
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.9),
+                             0 0 20px rgba(255, 255, 255, 0.7),
+                             0 0 30px rgba(255, 255, 255, 0.5);
             }
         }
 
-        /* Company Name */
+        /* Logo fragments for splitting animation */
+        .logo-fragment {
+            position: absolute;
+            opacity: 0;
+            color: var(--neon-white);
+            font-family: "Times New Roman", Times, serif;
+            text-shadow: var(--text-shadow), var(--glow-effect-white);
+        }
+
+        /* Company Name - with glitch effect */
         .company-name {
             font-size: 5vmin;
-            font-weight: bold;
+            font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.5vmin;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
             animation: text-flicker 5s infinite alternate;
-            transform: translateZ(0); /* Force GPU acceleration */
+            transform: translateZ(0);
             width: 100%;
-            background: transparent; /* Ensure transparency */
+            background: transparent;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        /* Text glitch effect for hover interactions */
+        .glitch-text {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .glitch-text:hover {
+            color: var(--matrix-green);
         }
 
         @keyframes text-flicker {
@@ -172,28 +228,75 @@
             }
         }
 
+        /* Glitch animation for text deconstruction */
+        @keyframes glitch-animation {
+            0% {
+                opacity: 1;
+                transform: translate(0);
+                text-shadow: 0 0 0 var(--matrix-green);
+            }
+            10% {
+                transform: translate(-2px, -2px);
+                text-shadow: 0 0 3px var(--matrix-green);
+            }
+            20% {
+                transform: translate(2px, 2px);
+                text-shadow: 0 0 3px var(--neon-blue);
+            }
+            30% {
+                transform: translate(-2px, 2px);
+                text-shadow: 0 0 3px var(--neon-purple);
+            }
+            40% {
+                transform: translate(2px, -2px);
+                text-shadow: 0 0 3px var(--matrix-green);
+            }
+            50% {
+                transform: translate(-2px, 2px);
+                text-shadow: 0 0 3px var(--neon-blue);
+            }
+            60% {
+                transform: translate(2px, 2px);
+                text-shadow: 0 0 3px var(--neon-purple);
+            }
+            70% {
+                transform: translate(-2px, -2px);
+                text-shadow: 0 0 3px var(--matrix-green);
+            }
+            80% {
+                transform: translate(0);
+                text-shadow: 0 0 0 var(--matrix-green);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(0);
+                text-shadow: 0 0 0 var(--matrix-green);
+            }
+        }
+
         /* Tagline */
         .tagline {
             font-size: 2.2vmin;
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
             opacity: 0.9;
             width: 100%;
             white-space: nowrap;
             letter-spacing: 0.1vmin;
-            background: transparent; /* Ensure transparency */
+            background: transparent;
+            transition: color 0.3s ease;
         }
 
-        /* Contact Email - FIXED: Made background fully transparent */
+        /* Contact Email */
         .contact {
             font-size: 2vmin;
             opacity: 0.8;
             transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-            transform: translateZ(0); /* Force GPU acceleration */
+            transform: translateZ(0);
             cursor: pointer;
             padding: 0.5rem 1rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 4px;
-            background-color: transparent; /* Fully transparent background */
+            background-color: transparent;
         }
 
         .contact:hover {
@@ -201,7 +304,6 @@
             transform: translateY(-3px) translateZ(0);
             border-color: var(--neon-blue);
             box-shadow: 0 0 10px rgba(0, 215, 255, 0.3);
-            /* Removed background color change on hover to maintain transparency */
         }
 
         /* Responsive adjustments */
@@ -210,7 +312,16 @@
                 padding: 1.5rem;
             }
 
+            .logo {
+                margin-bottom: 1rem;
+            }
+
+            .company-name {
+                margin-bottom: 0.8rem;
+            }
+
             .tagline {
+                margin-bottom: 2rem;
                 font-size: 2.8vmin;
             }
 
@@ -235,26 +346,30 @@
     </style>
 </head>
 <body>
-    <!-- Matrix Background Animation -->
-    <div class="matrix-background" id="matrixBackground"></div>
+    <!-- Matrix Background Animation with multiple layers for parallax -->
+    <div class="matrix-background" id="matrixBackground">
+        <div class="matrix-layer matrix-layer-1" id="matrixLayer1"></div>
+        <div class="matrix-layer matrix-layer-2" id="matrixLayer2"></div>
+        <div class="matrix-layer matrix-layer-3" id="matrixLayer3"></div>
+    </div>
 
     <!-- Darkened Overlay for Readability -->
     <div class="overlay"></div>
 
     <!-- Main Content Container -->
-    <div class="container">
+    <div class="container" id="container">
         <div class="content-wrapper">
-            <!-- Logo -->
-            <div class="logo" aria-label="Logical Appeals Logo">Λ</div>
+            <!-- Logo with interactive behavior -->
+            <div class="logo" aria-label="Logical Appeals Logo" id="logo">Λ</div>
 
             <!-- Company Name -->
-            <div class="company-name">Logical Appeals</div>
+            <div class="company-name glitch-text" id="companyName">Logical Appeals</div>
 
             <!-- Tagline -->
-            <div class="tagline">Legal Minds, Digital Mastery</div>
+            <div class="tagline glitch-text" id="tagline">Legal Minds, Digital Mastery</div>
 
             <!-- Contact Email -->
-            <div class="contact" id="contactEmail" tabindex="0" role="button">logicalappeals@gmail.com</div>
+            <div class="contact glitch-text" id="contactEmail" tabindex="0" role="button">admin@logicalappeals.com</div>
         </div>
     </div>
 
@@ -262,54 +377,85 @@
     <script>
         // DOM elements
         const contactEmail = document.getElementById('contactEmail');
-        const companyName = document.querySelector('.company-name');
-        const logo = document.querySelector('.logo');
-        const tagline = document.querySelector('.tagline');
+        const companyName = document.getElementById('companyName');
+        const logo = document.getElementById('logo');
+        const tagline = document.getElementById('tagline');
+        const container = document.getElementById('container');
         const matrixBackground = document.getElementById('matrixBackground');
+        const matrixLayer1 = document.getElementById('matrixLayer1');
+        const matrixLayer2 = document.getElementById('matrixLayer2');
+        const matrixLayer3 = document.getElementById('matrixLayer3');
 
         // Matrix characters - Added more legal terminology symbols
         const matrixChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789λΛ∧∨→←∃∀≡≈≠≤≥∞∑∏√∫∂∇∆Φ§¶†‡'.split('');
 
-        // Function to create matrix rain effect
+        // Track mouse position for parallax effects
+        let mouseX = 0;
+        let mouseY = 0;
+        let windowWidth = window.innerWidth;
+        let windowHeight = window.innerHeight;
+        let centerX = windowWidth / 2;
+        let centerY = windowHeight / 2;
+
+        // Function to create matrix rain effect with layers for parallax
         function createMatrixRain() {
             const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             if (prefersReducedMotion) return;
 
-            // Clear existing content
-            matrixBackground.innerHTML = '';
+            // Clear existing content in all layers
+            matrixLayer1.innerHTML = '';
+            matrixLayer2.innerHTML = '';
+            matrixLayer3.innerHTML = '';
 
             // Get window dimensions
-            const width = window.innerWidth;
-            const height = window.innerHeight;
+            windowWidth = window.innerWidth;
+            windowHeight = window.innerHeight;
+            centerX = windowWidth / 2;
+            centerY = windowHeight / 2;
 
             // Calculate number of columns based on window width
-            const columnCount = Math.floor(width / 30);
+            const columnCount = Math.floor(windowWidth / 30);
 
-            // Create columns
-            for (let i = 0; i < columnCount; i++) {
-                const column = document.createElement('div');
-                column.className = 'matrix-column';
+            // Create columns for each layer
+            for (let layer = 1; layer <= 3; layer++) {
+                const currentLayer = document.getElementById(`matrixLayer${layer}`);
+                
+                for (let i = 0; i < columnCount; i++) {
+                    const column = document.createElement('div');
+                    column.className = 'matrix-column';
 
-                // Random position and speed for each column
-                const leftPos = i * 30 + Math.random() * 15 - 7.5;
-                const duration = 7 + Math.random() * 15; // Between 7-22 seconds
-                const delay = Math.random() * 5; // Random delay up to 5 seconds
+                    // Random position and speed for each column
+                    const leftPos = i * 30 + Math.random() * 15 - 7.5;
+                    // Different speed ranges for each layer
+                    let duration, delay;
+                    
+                    if (layer === 1) { // Closest, fastest layer
+                        duration = 7 + Math.random() * 5; // Between 7-12 seconds
+                        delay = Math.random() * 3; // Random delay up to 3 seconds
+                    } else if (layer === 2) { // Middle layer
+                        duration = 12 + Math.random() * 6; // Between 12-18 seconds
+                        delay = Math.random() * 4; // Random delay up to 4 seconds
+                    } else { // Farthest, slowest layer
+                        duration = 18 + Math.random() * 7; // Between 18-25 seconds
+                        delay = Math.random() * 5; // Random delay up to 5 seconds
+                    }
 
-                column.style.left = `${leftPos}px`;
-                column.style.animationDuration = `${duration}s`;
-                column.style.animationDelay = `${delay}s`;
+                    column.style.left = `${leftPos}px`;
+                    column.style.animationDuration = `${duration}s`;
+                    column.style.animationDelay = `${delay}s`;
 
-                // Create random characters for this column
-                const charCount = Math.floor(Math.random() * 20) + 10; // Between 10-30 characters
-                const columnContent = [];
+                    // Create random characters for this column
+                    const charCount = Math.floor(Math.random() * 20) + 10; // Between 10-30 characters
+                    const columnContent = [];
 
-                for (let j = 0; j < charCount; j++) {
-                    const charIndex = Math.floor(Math.random() * matrixChars.length);
-                    columnContent.push(matrixChars[charIndex]);
+                    for (let j = 0; j < charCount; j++) {
+                        const charIndex = Math.floor(Math.random() * matrixChars.length);
+                        columnContent.push(matrixChars[charIndex]);
+                    }
+
+                    column.textContent = columnContent.join('\n');
+                    currentLayer.appendChild(column);
                 }
-
-                column.textContent = columnContent.join('\n');
-                matrixBackground.appendChild(column);
             }
         }
 
@@ -366,20 +512,295 @@
             }, 2000);
         }
 
+        // Parallax effect based on mouse position
+        function updateParallax(mouseX, mouseY) {
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReducedMotion) return;
+
+            // Calculate distance from center as a percentage
+            const percentX = (mouseX - centerX) / centerX; // -1 to 1
+            const percentY = (mouseY - centerY) / centerY; // -1 to 1
+
+            // Move layers at different rates
+            matrixLayer1.style.transform = `translate(${percentX * -20}px, ${percentY * -20}px)`; // Closest layer moves most
+            matrixLayer2.style.transform = `translate(${percentX * -10}px, ${percentY * -10}px)`; // Middle layer
+            matrixLayer3.style.transform = `translate(${percentX * -5}px, ${percentY * -5}px)`;  // Farthest layer moves least
+
+            // Also move container slightly for subtle depth effect
+            container.style.transform = `translate(${percentX * 5}px, ${percentY * 5}px)`;
+        }
+
+        // Create lambda splitting effect
+        function splitLambda() {
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReducedMotion) return;
+
+            // Save original content
+            const originalContent = logo.textContent;
+            
+            // Clear the main logo
+            logo.textContent = '';
+            
+            // Create fragment pieces
+            const fragmentCount = 8;
+            const fragments = [];
+            
+            // Create the fragments
+            for (let i = 0; i < fragmentCount; i++) {
+                const fragment = document.createElement('div');
+                fragment.className = 'logo-fragment';
+                fragment.textContent = 'Λ';
+                
+                // Smaller size
+                fragment.style.fontSize = '10vmin';
+                
+                // Random position around original
+                fragment.style.top = `${50 + (Math.random() * 100 - 50)}px`;
+                fragment.style.left = `${50 + (Math.random() * 100 - 50)}px`;
+                
+                // Random rotation
+                fragment.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                logo.appendChild(fragment);
+                fragments.push(fragment);
+                
+                // Set initial opacity
+                fragment.style.opacity = '0';
+            }
+            
+            // Add code fragments (1s and 0s, logic symbols)
+            const codeChars = ['1', '0', '∧', '∨', '→', '≡', 'λ'];
+            for (let i = 0; i < 12; i++) {
+                const codeFragment = document.createElement('div');
+                codeFragment.className = 'logo-fragment';
+                codeFragment.textContent = codeChars[Math.floor(Math.random() * codeChars.length)];
+                
+                // Smaller size
+                codeFragment.style.fontSize = '5vmin';
+                
+                // Random position around original
+                codeFragment.style.top = `${50 + (Math.random() * 150 - 75)}px`;
+                codeFragment.style.left = `${50 + (Math.random() * 150 - 75)}px`;
+                
+                // Random rotation
+                codeFragment.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                logo.appendChild(codeFragment);
+                fragments.push(codeFragment);
+                
+                // Set initial opacity
+                codeFragment.style.opacity = '0';
+            }
+            
+            // Animation sequence
+            let startTime = null;
+            const animationDuration = 1500; // 1.5 seconds total
+            
+            function animateFragments(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / animationDuration, 1);
+                
+                if (progress < 0.5) {
+                    // First half: explode outward
+                    const explodeProgress = progress * 2; // 0 to 1 during first half
+                    
+                    fragments.forEach((fragment, index) => {
+                        // Fade in
+                        fragment.style.opacity = explodeProgress;
+                        
+                        // Move outward
+                        const angle = (index / fragments.length) * Math.PI * 2;
+                        const distance = 100 * explodeProgress;
+                        const moveX = Math.cos(angle) * distance;
+                        const moveY = Math.sin(angle) * distance;
+                        
+                        fragment.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${Math.random() * 360 * explodeProgress}deg)`;
+                    });
+                } else {
+                    // Second half: implode back
+                    const implodeProgress = (progress - 0.5) * 2; // 0 to 1 during second half
+                    
+                    fragments.forEach((fragment, index) => {
+                        // Fade out at the end
+                        fragment.style.opacity = 1 - implodeProgress;
+                        
+                        // Move inward
+                        const angle = (index / fragments.length) * Math.PI * 2;
+                        const distance = 100 * (1 - implodeProgress);
+                        const moveX = Math.cos(angle) * distance;
+                        const moveY = Math.sin(angle) * distance;
+                        
+                        fragment.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${Math.random() * 360 * (1 - implodeProgress)}deg)`;
+                    });
+                    
+                    // When complete, restore the original logo
+                    if (progress === 1) {
+                        setTimeout(() => {
+                            // Remove fragments
+                            fragments.forEach(fragment => fragment.remove());
+                            
+                            // Restore original content
+                            logo.textContent = originalContent;
+                        }, 100);
+                    }
+                }
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animateFragments);
+                }
+            }
+            
+            requestAnimationFrame(animateFragments);
+        }
+
+        // Function to create text deconstruction effect
+        function createGlitchEffect(element) {
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReducedMotion) return;
+
+            // Save original text
+            const originalText = element.textContent;
+            const textLength = originalText.length;
+            
+            // Create an array to track which characters to glitch
+            const glitchIndices = [];
+            const glitchCount = Math.floor(textLength * 0.5); // Glitch 50% of characters
+            
+            // Randomly select indices to glitch
+            while (glitchIndices.length < glitchCount) {
+                const index = Math.floor(Math.random() * textLength);
+                if (!glitchIndices.includes(index)) {
+                    glitchIndices.push(index);
+                }
+            }
+            
+            // Perform the glitch animation
+            let iteration = 0;
+            const maxIterations = 10;
+            const interval = setInterval(() => {
+                let newText = '';
+                
+                for (let i = 0; i < textLength; i++) {
+                    if (glitchIndices.includes(i)) {
+                        // Replace with random matrix character
+                        newText += matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                    } else {
+                        // Keep original character
+                        newText += originalText[i];
+                    }
+                }
+                
+                element.textContent = newText;
+                
+                // On last iteration, restore original text
+                if (++iteration >= maxIterations) {
+                    clearInterval(interval);
+                    element.textContent = originalText;
+                    
+                    // Apply glitch animation to the text
+                    element.style.animation = 'glitch-animation 0.3s ease-out';
+                    
+                    // Remove animation after it completes
+                    setTimeout(() => {
+                        element.style.animation = '';
+                    }, 300);
+                }
+            }, 50);
+        }
+
+        // Function to make Lambda track cursor movement
+        function updateLambdaPosition(mouseX, mouseY) {
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReducedMotion) return;
+
+            const logoRect = logo.getBoundingClientRect();
+            const logoX = logoRect.left + logoRect.width / 2;
+            const logoY = logoRect.top + logoRect.height / 2;
+            
+            // Calculate angle between cursor and logo center
+            const deltaX = mouseX - logoX;
+            const deltaY = mouseY - logoY;
+            
+            // Limit the movement to be subtle
+            const maxRotation = 5; // degrees
+            const distanceLimit = 300; // px
+            
+            // Calculate distance and limit it
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            const limitedDistance = Math.min(distance, distanceLimit);
+            
+            // Calculate rotation angle based on cursor position
+            let angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+            
+            // Adjust angle to make it subtle
+            angle = (angle * (limitedDistance / distanceLimit)) * (maxRotation / 180);
+            
+            // Apply subtle rotation and translation
+            logo.style.transform = `rotate(${angle}deg) translateX(${deltaX / 50}px) translateY(${deltaY / 50}px)`;
+        }
+
+        // Track mouse movement
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Update parallax effect
+            updateParallax(mouseX, mouseY);
+            
+            // Update lambda position
+            updateLambdaPosition(mouseX, mouseY);
+        });
+
+        // Detect device orientation for mobile parallax
+        window.addEventListener('deviceorientation', (e) => {
+            if (e.beta && e.gamma) {
+                // Convert orientation to mouse-like coordinates
+                const x = (e.gamma / 30) * centerX + centerX; // gamma is between -90 and 90
+                const y = (e.beta / 30) * centerY + centerY;  // beta is between -180 and 180
+                
+                // Update parallax effect
+                updateParallax(x, y);
+                
+                // Update lambda position
+                updateLambdaPosition(x, y);
+            }
+        });
+
+        // Setup text deconstruction effect for interactive elements
+        document.querySelectorAll('.glitch-text').forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                createGlitchEffect(element);
+            });
+        });
+
+        // Setup Lambda interactive behavior
+        logo.addEventListener('click', splitLambda);
+
         // Run on load and resize
         window.addEventListener('load', () => {
             adjustSizes();
             createMatrixRain();
             updateMatrixCharacters();
+            
+            // Initialize parallax effect with center position
+            updateParallax(centerX, centerY);
         });
+        
         window.addEventListener('resize', () => {
             adjustSizes();
             updateMatrixRain();
+            
+            // Update center position
+            windowWidth = window.innerWidth;
+            windowHeight = window.innerHeight;
+            centerX = windowWidth / 2;
+            centerY = windowHeight / 2;
         });
 
         // Copy email to clipboard when clicked
         contactEmail.addEventListener('click', () => {
-            navigator.clipboard.writeText('logicalappeals@gmail.com')
+            navigator.clipboard.writeText('admin@logicalappeals.com')
                 .then(() => {
                     // Visual feedback
                     const originalText = contactEmail.textContent;
