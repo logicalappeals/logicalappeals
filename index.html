@@ -306,6 +306,15 @@
             box-shadow: 0 0 10px rgba(0, 215, 255, 0.3);
         }
 
+        /* Support Text Styling */
+        .support-text {
+            font-size: 2.2vmin;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            width: 100%;
+            text-align: center;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .container {
@@ -368,8 +377,11 @@
             <!-- Tagline -->
             <div class="tagline glitch-text" id="tagline">Legal Minds, Digital Mastery</div>
 
-            <!-- Contact Email -->
-            <div class="contact glitch-text" id="contactEmail" tabindex="0" role="button">admin@logicalappeals.com</div>
+            <!-- Support Text -->
+            <p class="support-text">For support, please contact:</p>
+
+            <!-- Contact Email as Mailto Link -->
+            <a href="mailto:admin@logicalappeals.com" class="contact" id="contactEmail" title="Send email to support">admin@logicalappeals.com</a>
         </div>
     </div>
 
@@ -796,32 +808,6 @@
             windowHeight = window.innerHeight;
             centerX = windowWidth / 2;
             centerY = windowHeight / 2;
-        });
-
-        // Copy email to clipboard when clicked
-        contactEmail.addEventListener('click', () => {
-            navigator.clipboard.writeText('admin@logicalappeals.com')
-                .then(() => {
-                    // Visual feedback
-                    const originalText = contactEmail.textContent;
-                    contactEmail.textContent = 'Email Copied!';
-
-                    // Reset after 2 seconds
-                    setTimeout(() => {
-                        contactEmail.textContent = originalText;
-                    }, 2000);
-                })
-                .catch(err => {
-                    console.error('Could not copy text: ', err);
-                });
-        });
-
-        // Keyboard accessibility for email copying
-        contactEmail.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                contactEmail.click();
-            }
         });
 
         // Detect if user prefers reduced motion
